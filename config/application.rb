@@ -21,6 +21,11 @@ Bundler.require(*Rails.groups)
 
 module Takeoffeah
   class Application < Rails::Application
+    # Responders Generator
+    # https://github.com/heartcombo/responders#generator    
+    # Use the responders controller from the responders gem
+    config.app_generators.scaffold_controller :responders_controller
+
     config.active_job.queue_adapter = :sidekiq
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
@@ -32,5 +37,8 @@ module Takeoffeah
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+    
+    # https://github.com/thoughtbot/factory_bot_rails#automatic-factory-definition-loading
+    config.factory_bot.definition_file_paths = ["custom/factories"]
   end
 end
