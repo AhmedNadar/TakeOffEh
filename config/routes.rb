@@ -46,14 +46,19 @@
 # webhooks_braintree POST /webhooks/braintree(.:format) pay/webhooks/braintree#create
 
 require 'sidekiq/web'
-
+# For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
-    authenticate :user, lambda { |u| u.admin? } do
-      mount Sidekiq::Web => '/sidekiq'
-    end
-
-
-  devise_for :users
   root to: 'home#index'
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
+  authenticate :user, lambda { |u| u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
+  devise_for  :users,
+          path: 'client',
+          path_names: {sign_in: 'login', sign_out: 'logout', edit: 'profile'},
+          controllers: {
+            registrations: 'registrations'
+          }
+  resources :users, only: [:show]
 end
